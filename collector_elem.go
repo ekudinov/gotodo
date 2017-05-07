@@ -5,10 +5,9 @@ import (
 	r "myitcv.io/react"
 )
 
-
 //go:generate reactGen
 
-// Collector component must work with input components
+// CollectorDef -collector component must work with input components
 // When add button is clicked it collect data from input
 // and after validation send DataCollected with data
 // When edit button is clicked it get edited data and fill input elements
@@ -21,11 +20,13 @@ type CollectorDef struct {
 	InputValue *InputBarDef
 }
 
+// CollectorProps - props
 type CollectorProps struct {
 	ID string
 }
 
-func Data(p CollectorProps) *CollectorDef {
+// Collector - create component
+func Collector(p CollectorProps) *CollectorDef {
 	res := new(CollectorDef)
 	res.InputName = InputBar(InputBarProps{ID: "todo-name", Name: "Name ", Holder: "Todo Name"})
 	res.InputValue = InputBar(InputBarProps{ID: "todo-value", Name: "Value ", Holder: "Todo Value"})
@@ -36,6 +37,7 @@ func Data(p CollectorProps) *CollectorDef {
 	return res
 }
 
+// Render - render component
 func (d *CollectorDef) Render() r.Element {
 	return r.Div(&r.DivProps{
 		ID: d.Props().ID,
@@ -45,13 +47,13 @@ func (d *CollectorDef) Render() r.Element {
 		d.InputValue)
 }
 
-// data collected message
+// DataCollected - data collected message
 // when data is ok it must be generated
 type DataCollected struct {
 	Item
 }
 
-// validation error message
+// ErrorValidation - validation error message
 // when data is false it must be generated
 type ErrorValidation struct {
 	Msg string
@@ -69,7 +71,7 @@ func (d *CollectorDef) collect() {
 	}
 }
 
-// data validation
+// validate - data validation
 func validate(str string) bool {
 	if str == "" {
 		return false

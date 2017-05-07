@@ -8,7 +8,7 @@ import (
 
 //go:generate reactGen
 
-// List element is collection of todo elemens
+// ListElemDef - collection of todo elemens
 // Message DataCollected - add item to map
 // RemoveButtonClicked - remove item from elements
 // EditButtonClicked - if key of element is in map
@@ -17,18 +17,21 @@ type ListElemDef struct {
 	r.ComponentDef
 }
 
+// ListElemProps - props
 type ListElemProps struct {
 	ID   string
 	Name string
 }
 
+// ListElemState - state
 type ListElemState struct {
 	// id current edit element
-	editId string
+	editID string
 	// collection items
 	todos map[string]Item
 }
 
+// ListElem - create list component
 func ListElem(p ListElemProps) *ListElemDef {
 	res := new(ListElemDef)
 	r.BlessElement(res, p)
@@ -38,12 +41,13 @@ func ListElem(p ListElemProps) *ListElemDef {
 	return res
 }
 
+// Render - render
 func (le *ListElemDef) Render() r.Element {
 	id := le.Props().ID
 	name := le.Props().Name
-	curId := le.State().editId
+	curID := le.State().editID
 	show := true //flag to show buttons on element
-	if curId != "" {
+	if curID != "" {
 		show = false
 	}
 
@@ -52,7 +56,7 @@ func (le *ListElemDef) Render() r.Element {
 	for id, item := range le.State().todos {
 		//mark edited element as class "edited"
 		class := ""
-		if id == curId {
+		if id == curID {
 			class = "edited"
 		}
 		todoDef := Todo(TodoProps{todoID: id, class: class, Item: item, showBtn: show})
@@ -67,7 +71,7 @@ func (le *ListElemDef) Render() r.Element {
 	return r.Div(&r.DivProps{ID: id}, r.S(name), el)
 }
 
-// needs for update state
+// Equals needs for update state
 func (le ListElemState) Equals(v ListElemState) bool {
 	if len(le.todos) != len(v.todos) {
 		return false
@@ -77,23 +81,24 @@ func (le ListElemState) Equals(v ListElemState) bool {
 			return false
 		}
 	}
-	if le.editId != v.editId {
+	if le.editID != v.editID {
 		return false
 	}
 	return true
 }
 
+// GetInitialState - init state
 func (le *ListElemDef) GetInitialState() ListElemState {
 	todos := make(map[string]Item, 0)
 	todos[uuid.NewV4().String()] = Item{Name: "Wake up", Value: "In 6-00"}
 	todos[uuid.NewV4().String()] = Item{Name: "Go", Value: "Go in 7-30"}
 	st := ListElemState{}
 	st.todos = todos
-	st.editId = "" //no element for edit
+	st.editID = "" //no element for edit
 	return st
 }
 
-// remove item from map
+// removeFromList - removes item from map
 func (le *ListElemDef) removeFromList(e RemoveButtonClicked) {
 	st := le.State()
 	oldl := st.todos
@@ -107,7 +112,7 @@ func (le *ListElemDef) removeFromList(e RemoveButtonClicked) {
 	le.SetState(st)
 }
 
-// add item to map
+// addToList - add item to map
 // if id edited is empty, generate new id
 // else update value for edited id
 func (le *ListElemDef) addToList(e DataCollected) {
@@ -118,18 +123,18 @@ func (le *ListElemDef) addToList(e DataCollected) {
 	for k, v := range oldMap {
 		newMap[k] = v
 	}
-	curId := st.editId
+	curID := st.editID
 	// if new element generate uuid
-	if curId == "" {
-		curId = uuid.NewV4().String()
+	if curID == "" {
+		curID = uuid.NewV4().String()
 	}
-	newMap[curId] = Item{Name: e.Name, Value: e.Value}
+	newMap[curID] = Item{Name: e.Name, Value: e.Value}
 	st.todos = newMap
-	st.editId = "" // reset id edit element
+	st.editID = "" // reset id edit element
 	le.SetState(st)
 }
 
-// get id of element to edit, save it and
+// editmode - get id of element to edit, save it and
 // after create EditDataSent with data of element
 func (le *ListElemDef) editmode(e EditButtonClicked) {
 	st := le.State()
@@ -139,11 +144,11 @@ func (le *ListElemDef) editmode(e EditButtonClicked) {
 		notifications.Dispatch(EditDataSent{Item: item})
 	}
 	//set id todo element is editing
-	st.editId = e.ButtonID
+	st.editID = e.ButtonID
 	le.SetState(st)
 }
 
-// message with data to edit
+// EditDataSent - message with data to edit
 type EditDataSent struct {
 	Item
 }

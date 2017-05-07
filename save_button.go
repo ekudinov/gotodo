@@ -7,7 +7,7 @@ import (
 
 //go:generate reactGen
 
-// Button element for save edited data
+// SaveButtonDef - button element for save edited data
 // When EditButtonClicked it show self
 // When click on button create SaveButtonClicked
 // DataCollected message hide button
@@ -15,16 +15,19 @@ type SaveButtonDef struct {
 	r.ComponentDef
 }
 
+// SaveButtonProps - props
 type SaveButtonProps struct {
 	ID   string
 	Name string
 }
 
+// SaveButtonState - state
 type SaveButtonState struct {
 	// how button?
 	isShow bool
 }
 
+// SaveButton - create component
 func SaveButton(p SaveButtonProps) *SaveButtonDef {
 	res := new(SaveButtonDef)
 	r.BlessElement(res, p)
@@ -33,12 +36,13 @@ func SaveButton(p SaveButtonProps) *SaveButtonDef {
 	return res
 }
 
-// when click button hide
+// OnClick - when click button hide
 func (sb *SaveButtonDef) OnClick(e *r.SyntheticMouseEvent) {
 	notifications.Dispatch(SaveButtonClicked{})
 
 }
 
+// Render - render
 func (sb *SaveButtonDef) Render() r.Element {
 	id := sb.Props().ID
 	name := sb.Props().Name
@@ -55,7 +59,7 @@ func (sb *SaveButtonDef) Render() r.Element {
 	})
 }
 
-// message generated save button clicked
+// SaveButtonClicked message - save button clicked
 type SaveButtonClicked struct{}
 
 // show button

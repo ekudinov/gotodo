@@ -6,23 +6,25 @@ import (
 	r "myitcv.io/react"
 )
 
+// AppDef - application component
 type AppDef struct {
 	r.ComponentDef
 	// collector element
 	collector *CollectorDef
 	// add button element
-	addBtn    *AddButtonDef
+	addBtn *AddButtonDef
 	// save button element
-	saveBtn   *SaveButtonDef
+	saveBtn *SaveButtonDef
 	// list elements
-	list      *ListElemDef
+	list *ListElemDef
 	// mode element
-	mode      *ModeDef
+	mode *ModeDef
 }
 
+// App - create app
 func App() *AppDef {
 	res := new(AppDef)
-	res.collector = Data(CollectorProps{ID: "section-data"})
+	res.collector = Collector(CollectorProps{ID: "section-data"})
 	res.mode = Mode(ModeProps{"id-mode"})
 	res.list = ListElem(ListElemProps{ID: "el-list", Name: "Todo list:"})
 	res.addBtn = AddButton(AddButtonProps{ID: "add-btn", Name: "Add to todo"})
@@ -31,6 +33,7 @@ func App() *AppDef {
 	return res
 }
 
+// Render - render application component
 func (a *AppDef) Render() r.Element {
 	return r.Div(&r.DivProps{
 		ID: "todo-input",
@@ -40,7 +43,7 @@ func (a *AppDef) Render() r.Element {
 		),
 		a.mode,
 		a.collector,
-		a.addBtn,a.saveBtn,
+		a.addBtn, a.saveBtn,
 		a.list,
 	)
 }

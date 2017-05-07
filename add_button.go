@@ -7,7 +7,7 @@ import (
 
 //go:generate reactGen
 
-// Button element for add data to list
+// AddButtonDef is button element for add data to list
 // When get EditButtonClicked hide self
 // DataCollected - show self
 // When click on button create AddButtonClicked
@@ -15,16 +15,19 @@ type AddButtonDef struct {
 	r.ComponentDef
 }
 
+// AddButtonProps is property
 type AddButtonProps struct {
 	ID   string
 	Name string
 }
 
+// AddButtonState is state
 type AddButtonState struct {
 	// is button hidden?
 	isHide bool
 }
 
+// AddButton create button element
 func AddButton(p AddButtonProps) *AddButtonDef {
 	res := new(AddButtonDef)
 	r.BlessElement(res, p)
@@ -33,10 +36,12 @@ func AddButton(p AddButtonProps) *AddButtonDef {
 	return res
 }
 
+// OnClick create AddButtonClicked message
 func (rb *AddButtonDef) OnClick(e *r.SyntheticMouseEvent) {
 	notifications.Dispatch(AddButtonClicked{})
 }
 
+// Render - render component
 func (rb *AddButtonDef) Render() r.Element {
 	id := rb.Props().ID
 	name := rb.Props().Name
@@ -56,8 +61,8 @@ func (rb *AddButtonDef) Render() r.Element {
 	return btn
 }
 
-// add button message
-type AddButtonClicked struct {}
+// AddButtonClicked - add button message
+type AddButtonClicked struct{}
 
 // hide add button
 func (rb *AddButtonDef) hide() {

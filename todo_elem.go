@@ -16,10 +16,14 @@ type Item struct {
 	Value string
 }
 
+// TodoDef - component presents item
+// when is edited buttons no show
+// and red color
 type TodoDef struct {
 	r.ComponentDef
 }
 
+// TodoProps - props
 type TodoProps struct {
 	// todo id = button id
 	todoID string
@@ -31,12 +35,14 @@ type TodoProps struct {
 	Item
 }
 
+// Todo - create component
 func Todo(p TodoProps) *TodoDef {
 	t := new(TodoDef)
 	r.BlessElement(t, p)
 	return t
 }
 
+// Render - render
 func (t *TodoDef) Render() r.Element {
 	todoProp := t.Props()
 	id := todoProp.todoID
@@ -65,26 +71,26 @@ func (t *TodoDef) Render() r.Element {
 type remove struct{ t *TodoDef }
 type edit struct{ t *TodoDef }
 
-// remove button click
+// OnClick - remove button click
 func (t remove) OnClick(e *r.SyntheticMouseEvent) {
 	id := e.Target().ID()
 	notifications.Dispatch(RemoveButtonClicked{ButtonID: id})
 	e.PreventDefault()
 }
 
-// edit button click
+// OnClick - edit button click
 func (t edit) OnClick(e *r.SyntheticMouseEvent) {
 	id := e.Target().ID()
 	notifications.Dispatch(EditButtonClicked{ButtonID: id})
 	e.PreventDefault()
 }
 
-// message for remove button
+// RemoveButtonClicked - message for remove button
 type RemoveButtonClicked struct {
 	ButtonID string
 }
 
-// message for edit button
+// EditButtonClicked - message for edit button
 type EditButtonClicked struct {
 	ButtonID string
 }
