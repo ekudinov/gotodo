@@ -31,8 +31,6 @@ type AddButtonState struct {
 func AddButton(p AddButtonProps) *AddButtonDef {
 	res := new(AddButtonDef)
 	r.BlessElement(res, p)
-	notifications.Subscribe(func(e EditButtonClicked) { res.hide() })
-	notifications.Subscribe(func(e DataCollected) { res.show() })
 	return res
 }
 
@@ -76,4 +74,10 @@ func (rb *AddButtonDef) show() {
 	st := rb.State()
 	st.isHide = false
 	rb.SetState(st)
+}
+
+// subscribe for notifications
+func (rb *AddButtonDef) ComponentDidMount() {
+	notifications.Subscribe(func(e EditButtonClicked) { rb.hide() })
+	notifications.Subscribe(func(e DataCollected) { rb.show() })
 }

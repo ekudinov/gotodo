@@ -31,8 +31,6 @@ type SaveButtonState struct {
 func SaveButton(p SaveButtonProps) *SaveButtonDef {
 	res := new(SaveButtonDef)
 	r.BlessElement(res, p)
-	notifications.Subscribe(func(e EditButtonClicked) { res.show() })
-	notifications.Subscribe(func(e DataCollected) { res.hide() })
 	return res
 }
 
@@ -74,4 +72,10 @@ func (sb *SaveButtonDef) hide() {
 	st := sb.State()
 	st.isShow = false
 	sb.SetState(st)
+}
+
+// subscribe for notifications
+func (sb *SaveButtonDef) ComponentDidMount() {
+	notifications.Subscribe(func(e EditButtonClicked) { sb.show() })
+	notifications.Subscribe(func(e DataCollected) { sb.hide() })
 }

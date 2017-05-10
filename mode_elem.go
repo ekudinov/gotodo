@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gu-io/gu/notifications"
 	r "myitcv.io/react"
+	"github.com/BurntSushi/xgb/res"
 )
 
 //go:generate reactGen
@@ -30,9 +31,6 @@ type ModeProps struct {
 func Mode(p ModeProps) *ModeDef {
 	res := new(ModeDef)
 	r.BlessElement(res, p)
-	notifications.Subscribe(func(e DataCollected) { res.setStatus(NormalStatus{"Normal"}) })
-	notifications.Subscribe(func(e EditButtonClicked) { res.setStatus(EditStatus{"Edit"}) })
-	notifications.Subscribe(func(e ErrorValidation) { res.setStatus(ErrorStatus{e.Msg}) })
 	return res
 }
 
@@ -110,4 +108,11 @@ func (n NormalStatus) String() string {
 // String - impl
 func (e EditStatus) String() string {
 	return e.Text
+}
+
+// subscribe for notifications
+func (s *ModeDef) ComponentDidMount() {
+	notifications.Subscribe(func(e DataCollected) { s.setStatus(NormalStatus{"Normal"}) })
+	notifications.Subscribe(func(e EditButtonClicked) { s.setStatus(EditStatus{"Edit"}) })
+	notifications.Subscribe(func(e ErrorValidation) { s.setStatus(ErrorStatus{e.Msg}) })
 }

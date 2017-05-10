@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gu-io/gu/notifications"
 	r "myitcv.io/react"
+	"github.com/BurntSushi/xgb/res"
 )
 
 //go:generate reactGen
@@ -31,9 +32,6 @@ func Collector(p CollectorProps) *CollectorDef {
 	res.InputName = InputBar(InputBarProps{ID: "todo-name", Name: "Name ", Holder: "Todo Name"})
 	res.InputValue = InputBar(InputBarProps{ID: "todo-value", Name: "Value ", Holder: "Todo Value"})
 	r.BlessElement(res, p)
-	notifications.Subscribe(func(e AddButtonClicked) { res.collect() })
-	notifications.Subscribe(func(e EditDataSent) { res.fill(e) })
-	notifications.Subscribe(func(e SaveButtonClicked) { res.collect() })
 	return res
 }
 
@@ -85,4 +83,11 @@ func (d *CollectorDef) fill(e EditDataSent) {
 	d.InputName.setValue(name)
 	value := e.Value
 	d.InputValue.setValue(value)
+}
+
+// subscribe for notifications
+func (d *CollectorDef) ComponentDidMount() {
+	notifications.Subscribe(func(e AddButtonClicked) { d.collect() })
+	notifications.Subscribe(func(e EditDataSent) { d.fill(e) })
+	notifications.Subscribe(func(e SaveButtonClicked) { d.collect() })
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/gu-io/gu/notifications"
 	"github.com/satori/go.uuid"
 	r "myitcv.io/react"
+	"github.com/BurntSushi/xgb/res"
 )
 
 //go:generate reactGen
@@ -35,9 +36,6 @@ type ListElemState struct {
 func ListElem(p ListElemProps) *ListElemDef {
 	res := new(ListElemDef)
 	r.BlessElement(res, p)
-	notifications.Subscribe(func(e DataCollected) { res.addToList(e) })
-	notifications.Subscribe(func(e RemoveButtonClicked) { res.removeFromList(e) })
-	notifications.Subscribe(func(e EditButtonClicked) { res.editmode(e) })
 	return res
 }
 
@@ -151,4 +149,11 @@ func (le *ListElemDef) editmode(e EditButtonClicked) {
 // EditDataSent - message with data to edit
 type EditDataSent struct {
 	Item
+}
+
+// subscribe for notifications
+func (le *ListElemDef) ComponentDidMount() {
+	notifications.Subscribe(func(e DataCollected) { le.addToList(e) })
+	notifications.Subscribe(func(e RemoveButtonClicked) { le.removeFromList(e) })
+	notifications.Subscribe(func(e EditButtonClicked) { le.editmode(e) })
 }
